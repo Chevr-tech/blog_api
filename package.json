@@ -1,0 +1,23 @@
+{
+  "name": "thecompassapi",
+  "version": "1.0.0",
+  "description": "RESTful api for the compass websiote",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+  "author": "julius",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.1.0",
+    "mongoose": "^5.13.5",
+    "multer": "^1.4.3",
+    "nodemon": "^2.0.12"
+  }
+}
