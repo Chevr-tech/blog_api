@@ -1,21 +1,42 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-const multer = require('multer');
-const cors = require('cors');
-const port = 5000 || process.env.PORT;
-require('dotenv').config();
+const port = process.env.PORT || 5000;
+require('./dotenv').config();
 
 //Routes 
-const indexRoutes = require('./routes/index');
-const authRoutes = require('./routes/auth')
+const indexRoutes = require('./routes');
+const adminRoutes = require('./routes/admin')
 
+app.use(express.static("uploads"));
 app.use(express.json())
-app.use(cors());
+app.use((req, res, next) => {
 
-app.use('/', indexRoutes);
-app.use('/auth', authRoutes)
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Accept,X-Auth-token,X-Username');
+
+    res.setHeader('Access-Control-Allow-Credentials', true);
+	
+    next();
+});
+
+app.get('/api', (req, res, next) => {
+    res.json({
+        routes: [
+            'GET /articles',
+            'GET /articles/<ARTICLE_ID>',
+            'contact developer for admin routes 😉'
+        ]
+    });
+});
+app.use('/api', indexRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('*', (req, res, next) => {
+    res.json({error: 'Resource not found'});
+});
 
 
 mongoose.connect(process.env.DBconnection, 
@@ -30,5 +51,5 @@ mongoose.connect(process.env.DBconnection,
     })
 })
 .catch(err => {
-    res.json({error: err})
-})
+    console.log(err);
+});
