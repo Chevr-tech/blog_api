@@ -1,17 +1,14 @@
 const mongoose = require('mongoose');
 
-        
-const schemaType = {
-    type: String,
-    require: true
-}
-
 const newsSchema = mongoose.Schema({
-    tag: {
+    tags: [{
         type: String,
-    },
+    }],
+    category: String,
+    image: String,
     author: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
     },
     caption: {
         type: String,
@@ -19,14 +16,11 @@ const newsSchema = mongoose.Schema({
     content: {
         type: String,
     },
-    country: {
-        type: String,
-    },
     date: {
         type: Date,
         default: Date.now
     }
-})
+});
 
 const News = mongoose.model('New', newsSchema)
 

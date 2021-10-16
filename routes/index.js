@@ -3,37 +3,30 @@ const router = express.Router();
 const News = require('../models/news');
 
 //all blog list
-router.get('/', (req, res) =>{
-    News.find()
+router.get('/articles', async (req, res) => {
+    let page = req.query.page;
+    page = Number(page);
+    if(!page) page = 1;
+    let limit = 10;
+    let count;
+    try {
+        count = await News.countDocuments({});
+    } catch (err) {
+        console.log(err)
+        count = 0;
+    }
+    News.find().sort({date: -1}).skip((page - 1) * limit).limit(limit)
     .then(data => {
         res.json({
-            articles: data
-        })
+            articles: data,
+            count,
+            limit,
+            page
+        });
     })
     .catch(err => {
         console.log({err: err})
-    })
-})
-
-//post a new blog 
-router.post('/articles', async (req, res) => {
-    const data = req.body;
-    const articles = new News(data);
-    try{
-        const result = await articles.save();
-        return res.send('data saved');
-    }catch(error){
-        res.json({error: error})
-    }
-    // .then(data => {
-    //     return res.json(data);
-    // })
-    // .then(data => {
-    //     res.json(data)
-    // })
-    // .catch(err => {
-    //     res.json({error: err})
-    // })
+    });
 })
 
 // fetch a  particular artcile
@@ -41,44 +34,12 @@ router.get('/articles/:id', async (req, res) => {
     const id = req.params.id; 
     try{
         const article = await News.findById(id);
+        if(!article) res.status(404).json({error: 'Article not found'});
         res.json(article);
     } catch(error){
-        res.json({error: `couldn't fetch of id - ${id}`})
-    }
-})
-
-//edit an articles
-router.patch('/article/edit/:id',async (req, res) => {
-    // console.log(req.body)
-
-    const {tag, author, caption, content, country} = req.body;
-    const id = req.params.id;
-    try{
-        const updatedaArticle = await News.updateOne({_id: id}, 
-            {$set: {
-                tag: tag,
-                author: author,
-                caption: caption,
-                content: content,
-                country: country,
-            }
-        });
-        // console.log(updatedaArticle);
-        res.json(updatedaArticle); 
-    }catch(error){
-        res.json({error: `couldn't fetch of id - ${id}`})
-    }
-})
-
-//deleting a post 
-router.delete('/articles/:id', async(req, res) => {
-    const id = req.params.id;
-    try{
-        const deletedNews = await News.deleteOne({_id: id})
-        res.json(deletedNews);
-        console.log('deleted news')
-    }catch(error){
-        res.json({error: error})
+        if(error.kind === 'ObjectId') return  res.status(404).json({error: 'Article not found'});
+        console.log(error)
+        res.json({error: `Something went wrong`});
     }
 })
 
