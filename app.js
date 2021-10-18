@@ -6,9 +6,8 @@ const port = process.env.PORT || 5000;
 
 //Routes 
 const indexRoutes = require('./routes');
-const adminRoutes = require('./routes/admin')
+const adminRoutes = require('./routes/admin');
 
-app.use(express.static("uploads"));
 app.use(express.json())
 app.use((req, res, next) => {
 
@@ -23,6 +22,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use('/api', express.static("uploads"));
 app.get('/api', (req, res, next) => {
     res.json({
         routes: [

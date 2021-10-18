@@ -63,8 +63,10 @@ router.post('/login', async (req, res) => {
 //post a new blog 
 router.post('/articles', isAdmin, upload.single('image'), async (req, res) => {
     if(!req.fileAccepted) {
-        fs.rm(req.file.path, () => {});
-        return res.status(400).json({error: 'Only image file types are supported'});
+        if(req.file && req.file.path) {
+            fs.rm(req.file.path, () => {});
+            return res.status(400).json({error: 'Only image file types are supported'});
+        }        
     }
     const data = req.body;
     const validated = newsValidation(data);
