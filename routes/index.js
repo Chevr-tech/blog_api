@@ -10,7 +10,7 @@ router.get('/articles', async (req, res) => {
     let limit = 10;
     let count;
     try {
-        count = await News.countDocuments({});
+        count = await News.countDocuments({}).populate('author');
     } catch (err) {
         console.log(err)
         count = 0;
@@ -33,7 +33,7 @@ router.get('/articles', async (req, res) => {
 router.get('/articles/:id', async (req, res) => {
     const id = req.params.id; 
     try{
-        const article = await News.findById(id);
+        const article = await News.findById(id).populate('author');
         if(!article) res.status(404).json({error: 'Article not found'});
         res.json(article);
     } catch(error){
