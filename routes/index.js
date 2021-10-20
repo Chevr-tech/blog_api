@@ -10,12 +10,12 @@ router.get('/articles', async (req, res) => {
     let limit = 10;
     let count;
     try {
-        count = await News.countDocuments({}).populate('author');
+        count = await News.countDocuments({});
     } catch (err) {
         console.log(err)
         count = 0;
     }
-    News.find().sort({date: -1}).skip((page - 1) * limit).limit(limit)
+    News.find().sort({date: -1}).skip((page - 1) * limit).limit(limit).populate('author')
     .then(data => {
         res.json({
             articles: data,
