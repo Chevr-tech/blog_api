@@ -79,8 +79,11 @@ router.post('/articles', isAdmin, upload.single('image'), async (req, res) => {
         data.tags = data.tags.map(tag => tag.trim());
     }
     data.author = req.user._id;
-    const articles = new News({...data, _id: req.postId, image: '/images/' + req.filename});
     try{
+        data.permalink = encodeURI(data.caption.split(' ').join('-').toLowerCase());
+        const count = await News.countDocuments({permalink: data.permalink});
+        if(count > 0) return res.status(400).json({error: 'Caption already in use'});
+        const articles = new News({...data, _id: req.postId, image: '/images/' + req.filename});
         const result = await articles.save();
         return res.json(result);
     }catch(error){

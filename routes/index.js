@@ -27,9 +27,9 @@ router.get('/articles', async (req, res) => {
     .catch(err => {
         console.log({err: err})
     });
-})
+});
 
-// fetch a  particular artcile
+// fetch a  particular article
 router.get('/articles/:id', async (req, res) => {
     const id = req.params.id; 
     try{
@@ -41,6 +41,19 @@ router.get('/articles/:id', async (req, res) => {
         console.log(error)
         res.json({error: `Something went wrong`});
     }
-})
+});
+
+// fetch a  particular article
+router.get('/articles/permalink/:permalink', async (req, res) => {
+    const permalink = req.params.permalink; 
+    try{
+        const article = await News.findOne({permalink}).populate('author');
+        if(!article) res.status(404).json({error: 'Article not found'});
+        res.json(article);
+    } catch(error){
+        console.log(error)
+        res.json({error: `Something went wrong`});
+    }
+});
 
 module.exports = router;

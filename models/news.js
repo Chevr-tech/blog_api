@@ -6,6 +6,7 @@ const newsSchema = mongoose.Schema({
     }],
     category: String,
     image: String,
+    permalink: { type: String, unique: true },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Admin'
@@ -21,6 +22,8 @@ const newsSchema = mongoose.Schema({
         default: Date.now
     }
 });
+
+newsSchema.index({permalink: 1});
 
 const News = mongoose.model('New', newsSchema)
 
