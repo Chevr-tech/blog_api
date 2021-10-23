@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Accept,X-Auth-token,X-Username');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Accept,Auth-token,Username');
 
     res.setHeader('Access-Control-Allow-Credentials', true);
 	
