@@ -7,7 +7,7 @@ module.exports = isAdmin = async (req, res, next) => {
   try {
     const { _id } = jwt.verify(token, process.env.TOKENSecret);
     let user = await Admin.findById(_id);
-    if(!user) res.status(403).send({ error: "Not authorized to access the resource" });
+    if(!user) return res.status(403).send({ error: "Not authorized to access the resource" });
     req.user = user;
     next();
   } catch (error) {
